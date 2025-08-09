@@ -12,13 +12,13 @@ export default function DimensionLanding() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [email, setEmail] = useState('')
   const [isVisible, setIsVisible] = useState(false)
-  const [currentTime, setCurrentTime] = useState<Date | null>(null)
+  const [currentTime, setCurrentTime] = useState<Date>(new Date())
   const heroRef = useRef<HTMLDivElement>(null)
   const mockupRef = useRef<HTMLDivElement>(null)
   const mousePosition = useMousePosition()
   
-  const heroInView = useIntersectionObserver(heroRef, { threshold: 0.1 })
-  const mockupInView = useIntersectionObserver(mockupRef, { threshold: 0.1 })
+  const heroInView = useIntersectionObserver(heroRef as React.RefObject<Element>, { threshold: 0.1 })
+  const mockupInView = useIntersectionObserver(mockupRef as React.RefObject<Element>, { threshold: 0.1 })
 
   useEffect(() => {
     setIsVisible(true)
@@ -30,6 +30,16 @@ export default function DimensionLanding() {
   // Parallax effect calculation
   const parallaxOffset = mousePosition.y * 0.02
   const parallaxOffsetX = mousePosition.x * 0.01
+
+  // Floating particles configuration
+  const floatingParticles = Array.from({ length: 20 }, (_, i) => ({
+    left: `${Math.random() * 100}%`,
+    top: `${Math.random() * 100}%`,
+    animationDelay: `${Math.random() * 5}s`,
+    animationDuration: `${3 + Math.random() * 4}s`
+  }))
+
+  const reactionCounts = [3, 2]
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 text-white overflow-hidden relative">
@@ -53,7 +63,7 @@ export default function DimensionLanding() {
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
         
         {/* Floating particles */}
-          {floatingParticles.map((particle, i) => (
+        {floatingParticles.map((particle, i) => (
           <div
             key={i}
             className="absolute w-1 h-1 bg-purple-400/30 rounded-full animate-float-particle"
@@ -374,15 +384,15 @@ export default function DimensionLanding() {
                             </div>
                             <p className="text-sm text-gray-300 leading-relaxed mb-3">{msg.message}</p>
                             <div className="flex items-center space-x-2">
-                      {msg.reactions.map((reaction, i) => (
-                        <button
-                          key={i}
-                          className="flex items-center space-x-1 bg-slate-700/50 hover:bg-slate-600/50 px-2 py-1 rounded-full text-xs transition-all duration-300 hover:scale-110"
-                        >
-                          <span>{reaction}</span>
-                          <span className="text-gray-400">{reactionCounts[i]}</span>
-                        </button>
-                      ))}
+                              {msg.reactions.map((reaction, i) => (
+                                <button
+                                  key={i}
+                                  className="flex items-center space-x-1 bg-slate-700/50 hover:bg-slate-600/50 px-2 py-1 rounded-full text-xs transition-all duration-300 hover:scale-110"
+                                >
+                                  <span>{reaction}</span>
+                                  <span className="text-gray-400">{reactionCounts[i]}</span>
+                                </button>
+                              ))}
                             </div>
                           </div>
                         </div>
